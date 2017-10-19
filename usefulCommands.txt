@@ -1,0 +1,52 @@
+
+
+nasm -f elf64 shell3.asm -o shell3.o   
+gcc -m64 -o shell3 shell3.o -nostdlib
+objdump -D shell3
+
+
+
+setarch x86_64 -R $SHELL
+execstack -s shell3
+
+
+
+strace ./koan
+
+echo $?
+
+locate libc.so.6
+
+
+
+
+gcc -S koan.c -fverbose-asm -Os -o koan.s
+
+
+objdump -D /usr/lib64/libc.so.6 | grep -B5 ret
+objdump -D /usr/lib64/libc.so.6 | grep -B5 retq
+objdump -D /usr/lib64/libc.so.6 | grep -B retq
+objdump -D /usr/lib64/libc.so.6 | grep -B5 retq
+objdump -D /usr/lib64/libc.so.6 | grep -B5 pop %rdi
+objdump -D /usr/lib64/libc.so.6 | grep -B5 pop %edi
+objdump -D /usr/lib64/libc.so.6 | grep -B5 'pop %edi"
+objdump -D /usr/lib64/libc.so.6 | grep -B5 "pop %edi"
+objdump -D /usr/lib64/libc.so.6 | grep -B8 "pop %edi"
+objdump -D /usr/lib64/libc.so.6 | grep -B8 retq
+objdump -D /usr/lib64/libc.so.6 | grep -B16 retq
+objdump -D /usr/lib64/libc.so.6 | grep -B16 retq > grepLibC.txt
+
+
+nm -D /usr/lib64/libc.so.6 | grep '\<system\>'
+nm -D /usr/lib64/libc.so.6 | grep '//bin//sh'
+nm -D /usr/lib64/libc.so.6 | grep '//bin/sh'
+nm -D /usr/lib64/libc.so.6 | grep '/bin/sh'
+
+nm -D /usr/lib64/libc.so.6 | grep 'syscall'
+
+
+printf "%X\n" $((0x7ffff7a01000 + 0x46c4e))
+7FFFF7A47C4E
+ 
+
+
